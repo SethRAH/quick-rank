@@ -1,0 +1,26 @@
+<app-page-layout>
+    <div class="current-options">
+        <table *ngIf="((ballotOptions$ | async)?.length ?? 0) > 0">
+            <tbody>
+                <tr *ngFor="let option of ballotOptions$ | async">
+                    <td>{{option.display}}</td>
+                    <td>
+                        <button mat-icon-button type="button" color="primary" (click)="openAddEditDialog(option.id, option.display)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p *ngIf="((ballotOptions$ | async)?.length ?? 0) === 0">
+            There are currently no ballot options. 
+            <button mat-button type="button" color="primary" (click)="openAddEditDialog(undefined, '')">Add a new option.</button>
+        </p>
+    </div>
+    <div>
+        <button mat-flat-button type="button" color="primary" (click)="openAddEditDialog(undefined, '')">Add a New Option</button>
+    </div>
+    <div>        
+        <button type="button" mat-raised-button color="primary" routerLink="/vote">Start Vote</button>
+    </div>
+</app-page-layout>

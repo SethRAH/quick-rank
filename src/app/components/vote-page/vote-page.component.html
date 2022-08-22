@@ -1,0 +1,10 @@
+<app-page-layout>
+    <div class="vote-page">
+        <div cdkDropList class="ballot-options" (cdkDropListDropped)="drop($event)">
+            <div class="ballot-option" *ngFor="let option of ballotOptions" cdkDrag>{{option.display}}</div>
+        </div>
+        <div>        
+            <button type="button" mat-raised-button color="primary" (click)="castVote()">Cast Vote</button>
+        </div>
+    </div>
+</app-page-layout>

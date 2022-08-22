@@ -1,0 +1,16 @@
+<h1 mat-dialog-title>
+    <span *ngIf="data.id">Edit</span>
+    <span *ngIf="!data.id">Add</span>
+    Ballot Option
+</h1>
+<div mat-dialog-content>
+    <input #hdnID type="hidden" [value]="data.id">
+    <mat-form-field appearance="fill">
+        <mat-label>Option Display Text</mat-label>
+        <input #displayInput matInput [value]="data.display">
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button [mat-dialog-close]="data.display"  (click)="save(displayInput.value, hdnID.value)">Save</button>
+</div>

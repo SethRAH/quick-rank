@@ -1,0 +1,17 @@
+.page-wrapper {
+    height: 100%;
+    background-color: #FFF;
+    color: rgba(0,0,0,0.8);
+
+    display: grid;
+    grid-template-columns: 1fr 80vw 1fr;
+    grid-template-rows: 1fr 80vh 1fr;
+
+    .content-wrapper {
+        margin-left: auto;
+        margin-right: auto;
+
+        grid-column: 2/3;
+        grid-row: 2/3;
+    }
+}
