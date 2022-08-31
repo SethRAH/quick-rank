@@ -1,5 +1,6 @@
 <app-page-layout>
     <div class="vote-page">
+        <p>Drag the items in order of your preference. Highest in the list is most preferred. Once you are happy with the order, click to cast your vote.</p>
         <div cdkDropList class="ballot-options" (cdkDropListDropped)="drop($event)">
             <div class="ballot-option" *ngFor="let option of ballotOptions" cdkDrag>{{option.display}}</div>
         </div>

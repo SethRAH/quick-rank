@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { QuickRankState, VoteTally } from 'src/app/state/quickRankState';
 
@@ -13,11 +14,15 @@ export class ResultsPageComponent implements OnInit {
 
   constructor(
     private store: Store,
+    private router: Router
   ) { 
       this.tallies = this.store.selectSnapshot<VoteTally[]>(QuickRankState.results);
   }
 
   ngOnInit(): void {
+    if(this.tallies.length < 1) {
+      this.router.navigate(['']);
+    }
   }
 
 }

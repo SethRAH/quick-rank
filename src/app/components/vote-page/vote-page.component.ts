@@ -23,15 +23,26 @@ export class VotePageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.ballotOptions = this.store.selectSnapshot<BallotOption[]>(QuickRankState.ballotOptions);
+    if(this.ballotOptions.length < 1) {
+      this.router.navigate(['']);
+    } else {
+      this.shuffleArray(this.ballotOptions);
+    }
   }
 
   drop(event: CdkDragDrop<string[]>){
     moveItemInArray(this.ballotOptions, event.previousIndex, event.currentIndex);
   }
 
-  //TODO: We seem to be retaining order when re-routing back to voting... perhaps we need to randomize this?
+  shuffleArray(array: BallotOption[]){
+    for(let i = array.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i+1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+
   castVote(){
-    console.log('In castVote (action handler)')
     let rankings = this.ballotOptions.map(o => o.id!);
     this.store.dispatch(new CastVote(rankings));
     
