@@ -22,6 +22,8 @@ import { QuickRankState } from './state/quickRankState';
 import { VotePageComponent } from './components/vote-page/vote-page.component';
 import { PassPhonePageComponent } from './components/pass-phone-page/pass-phone-page.component';
 import { ResultsPageComponent } from './components/results-page/results-page.component';
+import { NgChartsModule } from 'ng2-charts';
+import { ResultGraphComponent } from './components/result-graph/result-graph.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,8 @@ import { ResultsPageComponent } from './components/results-page/results-page.com
     AddEditBallotOptionDialogueComponent,
     VotePageComponent,
     PassPhonePageComponent,
-    ResultsPageComponent
+    ResultsPageComponent,
+    ResultGraphComponent
   ],
   imports: [
     BrowserModule,
@@ -44,7 +47,8 @@ import { ResultsPageComponent } from './components/results-page/results-page.com
     MatDialogModule,
     MatFormFieldModule,
     MatIconModule,
-    MatInputModule
+    MatInputModule,
+    NgChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

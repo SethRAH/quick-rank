@@ -1,7 +1,11 @@
 <app-page-layout>
     <div class="results-page">
-        <ol>
-            <li *ngFor="let tally of tallies"><span>{{tally.display}}</span> <span>with {{tally.count}} votes on elimination</span></li>
-        </ol>
+        <h3>The winner is: {{result.winnerDisplay}}</h3>
+        <div *ngFor="let round of result.rounds">
+            <h4>Round {{round.roundNumber}}</h4>
+            <app-result-graph  [tallies]="round.tallies" [colorMap]="result.colorMap">
+            </app-result-graph>
+        </div>
     </div>
+    
 </app-page-layout>

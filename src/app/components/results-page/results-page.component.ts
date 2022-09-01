@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { QuickRankState, VoteTally } from 'src/app/state/quickRankState';
+import { QuickRankState, ResultDto, VoteTally } from 'src/app/state/quickRankState';
 
 @Component({
   selector: 'app-results-page',
@@ -10,17 +10,17 @@ import { QuickRankState, VoteTally } from 'src/app/state/quickRankState';
 })
 export class ResultsPageComponent implements OnInit {
 
-  tallies : VoteTally[];
+  result : ResultDto;
 
   constructor(
     private store: Store,
     private router: Router
   ) { 
-      this.tallies = this.store.selectSnapshot<VoteTally[]>(QuickRankState.results);
+      this.result = this.store.selectSnapshot<ResultDto>(QuickRankState.results);
   }
 
   ngOnInit(): void {
-    if(this.tallies.length < 1) {
+    if(this.result.winnerId === "") {
       this.router.navigate(['']);
     }
   }

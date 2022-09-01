@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
 import {patch, append, updateItem } from '@ngxs/store/operators';
+import { baseColors } from "ng2-charts";
 import { BallotOption } from "../interfaces/ballot-option";
 import { QuickRankModel } from "../interfaces/quick-rank-model";
 import { AddUpdateBallotOption, CastVote } from "./actions";
@@ -9,6 +10,19 @@ export interface VoteTally{
     id: string;
     display: string;
     count: number;
+}
+
+export interface VoteRound{
+    roundNumber: number;
+    tallies: VoteTally[];
+    eliminatedId: string;
+}
+
+export interface ResultDto{
+    winnerId: string;
+    winnerDisplay: string;
+    rounds: VoteRound[];
+    colorMap: Map<string,string>;
 }
 
 @State<QuickRankModel>({
@@ -55,11 +69,26 @@ export class QuickRankState {
         return state.ballotOptions;
     }
 
+    static constructColorMap(options :string[]) {
+        let sortedOptions = [...options].sort();
+        let colorMap = new Map<string, string>();
+        let items = sortedOptions.forEach((o,i) => {
+            const r = baseColors[i%12][0];
+            const g = baseColors[i%12][1];
+            const b = baseColors[i%12][2];
+            colorMap.set(o, `rgb(${r},${g},${b})`);
+        });
+        return colorMap;
+    }
+
     @Selector()
     static results(state: QuickRankModel){
         console.log("In Select results");
         let optionsInEliminationOrder: VoteTally[] = [];
         let availableOptions = state.ballotOptions.map(o => o.id!);
+        let colorMap = this.constructColorMap(availableOptions);
+        let roundNumber = 1;
+        let rounds :VoteRound[] = [];
         while(availableOptions.length > 1){
             let votes = state.votes.map(r => r.find(i => availableOptions.includes(i))).filter(v => v !== undefined).map(v => v!);
             let resolvedTallies = new Map<string, number>();
@@ -79,12 +108,19 @@ export class QuickRankState {
             console.log(`${removingOption.id}|${removingOption.display} has been eliminated with only ${removingOption.count} votes`);
             optionsInEliminationOrder.push(removingOption);
             availableOptions = availableOptions.filter(o => o != removingOption.id);
+            let round :VoteRound = { roundNumber: roundNumber, tallies: finalTallies, eliminatedId: removingOption.id };
+            rounds.push(round);
+            roundNumber++;
         }
+        let result :ResultDto = {rounds: rounds, colorMap: colorMap, winnerId: "", winnerDisplay: ""};
         if(availableOptions.length === 1){
             let numberOfVotes = state.votes.map(r => r.find(i => availableOptions.includes(i))).filter(v => v !== undefined).map(v => v!).length;
-            optionsInEliminationOrder.push({"id": availableOptions[0], "count": numberOfVotes, "display": state.ballotOptions.find(o => o.id == availableOptions[0])!.display})
+            optionsInEliminationOrder.push({"id": availableOptions[0], "count": numberOfVotes, "display": state.ballotOptions.find(o => o.id == availableOptions[0])!.display});
+            result.winnerId = availableOptions[0];
+            result.winnerDisplay = state.ballotOptions.find(o => o.id == availableOptions[0])!.display;
         }
 
-        return optionsInEliminationOrder.reverse();
+
+        return result;
     }
 }
